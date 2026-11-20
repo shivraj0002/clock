@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0a0a;
+  --fg: #ededed;
+  --muted: #6b7280;
+  --accent: #60a5fa;
+  --glow: rgba(96, 165, 250, 0.35);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+html[data-anim="off"] * {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Controls fade out when idle in zen/fullscreen */
+.chrome {
+  transition: opacity 0.4s ease;
+}
+[data-hidden="true"] .chrome,
+[data-hidden="true"].chrome {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Display font (set via data-font on <html>) */
+:root {
+  --display: var(--font-geist-mono);
+}
+html[data-font="geist"] {
+  --display: var(--font-geist-mono);
+}
+html[data-font="jetbrains"] {
+  --display: var(--font-jetbrains);
+}
+html[data-font="orbitron"] {
+  --display: var(--font-orbitron);
+}
+html[data-font="led"] {
+  --display: var(--font-led);
+}
+.display {
+  font-family: var(--display), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Animated backgrounds */
+.bgfx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bg-gradient {
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--accent) 28%, var(--bg)),
+    var(--bg) 40%,
+    color-mix(in srgb, var(--fg) 12%, var(--bg)) 70%,
+    color-mix(in srgb, var(--accent) 28%, var(--bg))
+  );
+  background-size: 300% 300%;
+  animation: bg-drift 25s ease infinite;
+}
+@keyframes bg-drift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.bg-aurora::before,
+.bg-aurora::after {
+  content: "";
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.2;
+}
+.bg-aurora::before {
+  background: var(--accent);
+  left: -20vmax;
+  top: -20vmax;
+  animation: bg-f1 22s ease-in-out infinite alternate;
+}
+.bg-aurora::after {
+  background: color-mix(in srgb, var(--fg) 60%, var(--accent));
+  right: -25vmax;
+  bottom: -25vmax;
+  animation: bg-f2 28s ease-in-out infinite alternate;
+}
+@keyframes bg-f1 {
+  to {
+    transform: translate(30vmax, 20vmax) scale(1.2);
+  }
+}
+@keyframes bg-f2 {
+  to {
+    transform: translate(-30vmax, -15vmax) scale(0.9);
+  }
+}
+.bg-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 20%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 20%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: bg-grid 8s linear infinite;
+  mask-image: radial-gradient(ellipse at center, #000 15%, transparent 75%);
+}
+@keyframes bg-grid {
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+/* cmdk palette */
+[cmdk-root] {
+  width: 100%;
+}
+[cmdk-input] {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--fg);
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
+}
+[cmdk-list] {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+[cmdk-group-heading] {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+[cmdk-item] {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+[cmdk-item][data-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+[cmdk-empty] {
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
