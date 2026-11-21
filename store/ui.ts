@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Key = "settingsOpen" | "statsOpen" | "paletteOpen" | "zen" | "pip";
+type Key = "settingsOpen" | "statsOpen" | "paletteOpen" | "zen" | "pip" | "hint";
 
 type UI = Record<Key, boolean> & {
   toggle: (k: Key) => void;
@@ -14,6 +14,7 @@ export const useUI = create<UI>()((set) => ({
   paletteOpen: false,
   zen: false,
   pip: false,
+  hint: false,
   toggle: (k) => set((s) => ({ [k]: !s[k] }) as Pick<UI, Key>),
   setKey: (k, v) => set({ [k]: v } as Pick<UI, Key>),
 }));

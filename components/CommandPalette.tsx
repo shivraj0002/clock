@@ -55,7 +55,11 @@ export function CommandPalette() {
             <Command.Group heading="Actions">
               <Item label="Start / pause" hint="Space" fn={toggleCurrent} />
               <Item label="Reset" hint="R" fn={resetCurrent} />
-              <Item label="Toggle fullscreen" hint="F" fn={toggleFullscreen} />
+              <Item
+                label="Toggle fullscreen"
+                hint="F"
+                fn={() => !toggleFullscreen() && useUI.getState().setKey("hint", true)}
+              />
               <Item label="Toggle zen mode" hint="Z" fn={() => ui.toggle("zen")} />
               {pipOk && <Item label="Open mini window" fn={() => ui.toggle("pip")} />}
               <Item label="Open settings" hint="?" fn={() => ui.setKey("settingsOpen", true)} />

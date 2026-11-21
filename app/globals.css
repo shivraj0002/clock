@@ -37,6 +37,17 @@ html[data-anim="off"] * {
   }
 }
 
+.safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.safe-x {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
 /* Controls fade out when idle in zen/fullscreen */
 .chrome {
   transition: opacity 0.4s ease;

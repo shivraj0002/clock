@@ -12,10 +12,11 @@ const led = Share_Tech_Mono({ variable: "--font-led", subsets: ["latin"], weight
 export const metadata: Metadata = {
   title: "Clock",
   description: "Themeable clock, timer and focus tools for long work sessions",
+  other: { "apple-mobile-web-app-capable": "yes" },
   appleWebApp: { capable: true, title: "Clock", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#0a0a0a" };
+export const viewport: Viewport = { themeColor: "#0a0a0a", viewportFit: "cover" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

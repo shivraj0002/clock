@@ -16,6 +16,8 @@ import { SettingsPanel } from "@/components/SettingsPanel";
 import { StatsPanel } from "@/components/StatsPanel";
 import { CommandPalette } from "@/components/CommandPalette";
 import { MiniWindow, usePipSupported } from "@/components/MiniWindow";
+import { InstallHint } from "@/components/InstallHint";
+import { isStandalone, usePlatform } from "@/lib/platform";
 import { BreakReminder } from "@/components/BreakReminder";
 import { Watchers } from "@/components/Watchers";
 import { Clock } from "@/components/clocks/Clock";
@@ -36,6 +38,7 @@ export function Shell() {
   const task = useSessions((s) => s.task);
   const { isFullscreen, toggle: toggleFs } = useFullscreen();
   const pipOk = usePipSupported();
+  const { standalone } = usePlatform();
   const idle = useIdle(3000);
   const shift = usePixelShift(burnIn);
   const brightness = useBrightness(dim, autoDim);
@@ -74,7 +77,7 @@ export function Shell() {
           lapCurrent();
           break;
         case "f":
-          toggleFs();
+          if (!toggleFs() && !isStandalone()) ui.setKey("hint", true);
           break;
         case "z":
           ui.toggle("zen");
@@ -105,7 +108,7 @@ export function Shell() {
   return (
     <div
       data-hidden={hidden}
-      className="relative flex min-h-screen flex-col"
+      className="relative flex min-h-dvh flex-col"
       style={{ cursor: hidden ? "none" : undefined }}
     >
       <Background />
@@ -113,7 +116,7 @@ export function Shell() {
       <BreakReminder />
       <MiniWindow />
 
-      <header className="chrome relative z-10 flex flex-wrap items-center justify-between gap-2 p-4">
+      <header className="chrome safe-top safe-x relative z-10 flex flex-wrap items-center justify-between gap-2 pb-4">
         <nav className="flex flex-wrap gap-1" aria-label="Mode">
           {MODES.map((m) => (
             <Btn
@@ -141,9 +144,15 @@ export function Shell() {
           <Btn active={statsOpen} onClick={() => useUI.getState().toggle("statsOpen")} title="Stats (S)">
             Stats
           </Btn>
-          <Btn active={isFullscreen} onClick={toggleFs} title="Fullscreen (F)">
-            {isFullscreen ? "Exit full" : "Fullscreen"}
-          </Btn>
+          {!standalone && (
+            <Btn
+              active={isFullscreen}
+              onClick={() => !toggleFs() && useUI.getState().setKey("hint", true)}
+              title="Fullscreen (F)"
+            >
+              {isFullscreen ? "Exit full" : "Fullscreen"}
+            </Btn>
+          )}
           <Btn active={settingsOpen} onClick={() => useUI.getState().toggle("settingsOpen")} title="Settings (?)">
             Settings
           </Btn>
@@ -172,7 +181,7 @@ export function Shell() {
         </AnimatePresence>
       </main>
 
-      <footer className="chrome relative z-10 flex flex-col items-center gap-2 p-4">
+      <footer className="chrome safe-bottom safe-x relative z-10 flex flex-col items-center gap-2 pt-4">
         <input
           value={task}
           onChange={(e) => useSessions.getState().setTask(e.target.value)}
@@ -190,6 +199,7 @@ export function Shell() {
       {settingsOpen && <SettingsPanel />}
       {statsOpen && <StatsPanel />}
       <CommandPalette />
+      <InstallHint />
       {brightness < 1 && (
         <div
           aria-hidden
